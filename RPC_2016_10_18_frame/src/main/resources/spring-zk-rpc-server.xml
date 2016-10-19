@@ -19,7 +19,7 @@
  
     <!-- 配置 RPC 服务器 -->
     <bean id="rpcServer" class="com.li.it.server.RpcServer">
-        <constructor-arg name="serverAddress" value="${server.address}"/>
+        <constructor-arg name="serverAddress" value="127.0.0.1:8090"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>
 </beans>

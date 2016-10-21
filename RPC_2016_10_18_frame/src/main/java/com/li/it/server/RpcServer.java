@@ -51,7 +51,8 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
  
     @Override
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class); // 获取所有带有 RpcService 注解的 Spring Bean
+    	// 获取所有带有 RpcService 注解的 Spring Bean
+        Map<String, Object> serviceBeanMap = ctx.getBeansWithAnnotation(RpcService.class); 
         if (MapUtils.isNotEmpty(serviceBeanMap)) {
             for (Object serviceBean : serviceBeanMap.values()) {
                 String interfaceName = serviceBean.getClass().getAnnotation(RpcService.class).value().getName();
@@ -66,19 +67,21 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
+            bootstrap.group(bossGroup, workerGroup)
+            		 .channel(NioServerSocketChannel.class)
+                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel channel) throws Exception {
                             channel.pipeline()
-                                    .addLast(new RpcDecoder(RpcRequest.class)) // 将 RPC 请求进行解码（为了处理请求）
+                                    .addLast(new RpcDecoder(RpcRequest.class)) 	// 将 RPC 请求进行解码（为了处理请求）
                                     .addLast(new RpcEncoder(RpcResponse.class)) // 将 RPC 响应进行编码（为了返回响应）
-                                    .addLast(new RpcHandler(handlerMap)); // 处理 RPC 请求
+                                    .addLast(new RpcHandler(handlerMap)); 		// 处理 RPC 请求
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
  
+            //解析ip port
             String[] array = serverAddress.split(":");
             String host = array[0];
             int port = Integer.parseInt(array[1]);

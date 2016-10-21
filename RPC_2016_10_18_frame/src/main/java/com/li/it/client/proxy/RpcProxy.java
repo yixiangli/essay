@@ -26,12 +26,16 @@ public class RpcProxy {
         this.serviceDiscovery = serviceDiscovery;
     }
  
+    /**
+     * 生成代理
+     * @param interfaceClass
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public <T> T create(Class<?> interfaceClass) {
-        return (T) Proxy.newProxyInstance(
-            interfaceClass.getClassLoader(),
-            new Class<?>[]{interfaceClass},
+        return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),new Class<?>[]{interfaceClass},
             new InvocationHandler() {
+        		//RPC调用
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                     RpcRequest request = new RpcRequest(); // 创建并初始化 RPC 请求
@@ -42,15 +46,17 @@ public class RpcProxy {
                     request.setParameters(args);
  
                     if (serviceDiscovery != null) {
-                        serverAddress = serviceDiscovery.discover(); // 发现服务
+                    	// 发现服务
+                        serverAddress = serviceDiscovery.discover(); 
                     }
  
                     String[] array = serverAddress.split(":");
                     String host = array[0];
                     int port = Integer.parseInt(array[1]);
- 
-                    RpcClient client = new RpcClient(host, port); // 初始化 RPC 客户端
-                    RpcResponse response = client.send(request); // 通过 RPC 客户端发送 RPC 请求并获取 RPC 响应
+                    // 初始化 RPC 客户端
+                    RpcClient client = new RpcClient(host, port); 
+                    // 通过 RPC 客户端发送 RPC 请求并获取 RPC 响应
+                    RpcResponse response = client.send(request); 
  
                     if (response.getError() != null) {
                         throw response.getError();

@@ -23,6 +23,10 @@ public class ServiceRegistry {
         this.registryAddress = registryAddress;
     }
  
+    /**
+     * 服务注册
+     * @param data
+     */
     public void register(String data) {
         if (data != null) {
             ZooKeeper zk = connectServer();
@@ -32,6 +36,10 @@ public class ServiceRegistry {
         }
     }
  
+    /**
+     * 
+     * @return
+     */
     private ZooKeeper connectServer() {
         ZooKeeper zk = null;
         try {

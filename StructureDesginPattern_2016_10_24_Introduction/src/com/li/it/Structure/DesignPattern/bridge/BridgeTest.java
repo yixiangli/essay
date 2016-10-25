@@ -28,7 +28,7 @@ public class BridgeTest {
         Driver driver1 = new MySQLDriver();
         driverManager.setDriver(driver1);
         driverManager.connect();
- 
+        
         Driver driver2 = new DB2Driver();
         driverManager.setDriver(driver2);
         driverManager.connect();
